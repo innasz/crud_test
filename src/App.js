@@ -1,27 +1,31 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 
 const App = () => {
-  // 함수 상수 변수 상태들을 선언하는 곳
-  // 리턴이하는 화면에 보여지는 부분
+  // 1
+  const [posts, setPosts] = useState([]);
 
-  const [value, setValue] = useState('');
-  const [agree, setAgree] = useState(false);
-  console.log('PPPPPPPPPPPPPPPPPPP', agree);
-  console.log('ddddddddd', value);
+  // 2
+  const getPosts = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/post');
+      console.log('++===+++===', response.data.data);
+      setPosts(response.data.data);
+    } catch (e) {
+      console.log(e.messages);
+    }
+  };
 
-  // const changeA = (a) => {
-  //   setValue(a);
-  // };
   return (
     <div>
-      {value}
-      <input type='checkbox' value={agree} onChange={() => setAgree(!agree)} />
-      <input
-        type='text'
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      {/* <button onClick={changeA('안녕하세요')}>값 변경하기</button> */}
+      {posts?.map((post, index) => (
+        <div key={index}>
+          {' '}
+          <h1>{post.title}</h1>
+          <h2>{post.content}</h2>
+        </div>
+      ))}
+      <button onClick={getPosts}>데이터 가져오기</button>
     </div>
   );
 };
